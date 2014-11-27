@@ -8,10 +8,17 @@ namespace Invaders
 {
     class Game
     {
+        private int score = 0, livesLeft = 2, wave = 0, framesSkipped = 0;
+
+        private Rectangle boundaries;
+        private Random random;
+
+        private Direction invaderDirection;
         private List<Invader> invaders;
+
         private PlayerShip playerShip;
-        private List<Shot> playerShots;
-        private List<Shot> invaderShots;
+        private List<Shot> playerShots, invaderShots;
+
         private Stars stars;
 
 
@@ -20,12 +27,15 @@ namespace Invaders
         /// </summary>
         public event EventHandler GameOver;
 
-        private System.Drawing.Rectangle ClientRectangle;
-
-        public Game(System.Drawing.Rectangle ClientRectangle)
+        public Game(Rectangle boundaries)
         {
             // TODO: Complete member initialization
-            this.ClientRectangle = ClientRectangle;
+            this.boundaries = boundaries;
+            stars = new Stars();
+            invaders = new List<Invader>();
+            playerShip = new PlayerShip();
+            playerShots = new List<Shot>();
+            invaderShots = new List<Shot>();
         }
         public void FireShot()
         {
@@ -77,8 +87,11 @@ namespace Invaders
         /// <param name="animationCell">The animation cell to draw the invaders at.</param>
         public void Draw(Graphics g, int animationCell)
         {
+            //Draw the outer space background.
+            g.FillRectangle(Brushes.Black, boundaries);
             stars.Draw(g);
 
+            //Draw everything else.
             foreach (Invader invader in invaders)
                 invader.Draw(g, animationCell);
 
@@ -89,6 +102,22 @@ namespace Invaders
 
             foreach (Shot shot in invaderShots)
                 shot.Draw(g);
+
+            //Draw score.
+            g.DrawString(score.ToString(), new Font(FontFamily.Families[0], 45f), Brushes.GreenYellow, 0, -10);
+
+            //Draw player's lives.
+            Image player = Properties.Resources.player;
+            for (int i = 0; i < livesLeft; i++)
+            {
+                int x = (player.Width + 10) * i;
+                g.DrawImageUnscaled(player, boundaries.Width - player.Width - 10 - x, 10);
+            }
+        }
+
+        public void Twinkle()
+        {
+
         }
     }
 }

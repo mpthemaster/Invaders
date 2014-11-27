@@ -14,7 +14,7 @@ namespace Invaders
 
         internal void Draw(System.Drawing.Graphics g, int animationCell)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
     }
 }

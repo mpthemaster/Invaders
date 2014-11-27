@@ -20,7 +20,7 @@ namespace Invaders
         /// <summary>
         /// Whether the game is over.
         /// </summary>
-        private bool gameOver;
+        private bool gameOver = true;
         private Game game;
         private int animationCell; //What animation cell the invaders are on.
 
@@ -118,12 +118,23 @@ namespace Invaders
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
+            
+            //Draw the frame.
+            game.Draw(g, animationCell);
+            
+            //Draw that the game is over and instructions.
             if (gameOver)
             {
-                //End game writing********************************************************************************************
+                string endScreen = "Game Over!", instructions = "s: Start Game, q: Quit Game";
+                Font fontEndScreen = new Font(FontFamily.Families[0], 100f, FontStyle.Bold);
+                Font fontInstructions = new Font(FontFamily.Families[0], 50f, FontStyle.Bold);
+                SizeF sizeEndScreen = e.Graphics.MeasureString(endScreen, fontEndScreen);
+                SizeF sizeInstructions = e.Graphics.MeasureString(instructions, fontInstructions);
+
+                g.DrawString(endScreen, fontEndScreen, Brushes.Yellow, (Width - sizeEndScreen.Width) / 2, (Height - sizeEndScreen.Height) / 2);
+                g.DrawString(instructions, fontInstructions, Brushes.Yellow, (Width - sizeInstructions.Width) / 2, (Height +
+                    sizeEndScreen.Height - sizeInstructions.Height) / 2);
             }
-            else
-                game.Draw(g, animationCell);
         }
     }
 }

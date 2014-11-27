@@ -9,7 +9,7 @@ namespace Invaders
     {
         internal void Draw(System.Drawing.Graphics g)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
     }
 }
