@@ -22,6 +22,7 @@ namespace Invaders
         /// </summary>
         private bool gameOver;
         private Game game;
+        private int animationCell; //What animation cell the invaders are on.
 
         public Form1()
         {
@@ -116,14 +117,13 @@ namespace Invaders
         /// </summary>
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
+            Graphics g = e.Graphics;
             if (gameOver)
             {
                 //End game writing********************************************************************************************
             }
             else
-            {
-                //Draw frame************************************************************************************************
-            }
+                game.Draw(g, animationCell);
         }
     }
 }
