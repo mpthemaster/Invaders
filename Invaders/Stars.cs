@@ -11,5 +11,10 @@ namespace Invaders
         {
             //throw new NotImplementedException();
         }
+
+        internal void Twinkle(Random random)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

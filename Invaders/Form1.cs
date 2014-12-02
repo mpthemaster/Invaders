@@ -20,15 +20,17 @@ namespace Invaders
         /// <summary>
         /// Whether the game is over.
         /// </summary>
-        private bool gameOver = true;
+        private bool gameOver;
         private Game game;
         private int animationCell; //What animation cell the invaders are on.
+        private Random random;
 
         public Form1()
         {
             InitializeComponent();
 
-            game = new Game(ClientRectangle); //Tells the game object how big the game's window is.
+            random = new Random();
+            game = new Game(ClientRectangle, random); //Tells the game object how big the game's window is.
             game.GameOver += Game_GameOver;
         }
 
@@ -37,7 +39,8 @@ namespace Invaders
         /// </summary>
         private void timerAnimation_Tick(object sender, EventArgs e)
         {
-
+            game.Go();
+            game.Twinkle();
         }
 
         /// <summary>

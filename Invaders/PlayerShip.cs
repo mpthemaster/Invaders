@@ -13,5 +13,10 @@ namespace Invaders
         {
             //throw new NotImplementedException();
         }
+
+        internal void Move(Direction direction)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -27,19 +27,30 @@ namespace Invaders
         /// </summary>
         public event EventHandler GameOver;
 
-        public Game(Rectangle boundaries)
+        /// <summary>
+        /// Creates the game.
+        /// </summary>
+        /// <param name="boundaries">The boundaries of the battlefield.</param>
+        /// <param name="random">A random number generator.</param>
+        public Game(Rectangle boundaries, Random random)
         {
-            // TODO: Complete member initialization
             this.boundaries = boundaries;
+            this.random = random;
             stars = new Stars();
-            invaders = new List<Invader>();
             playerShip = new PlayerShip();
             playerShots = new List<Shot>();
             invaderShots = new List<Shot>();
+            NextWave();
         }
+
+        /// <summary>
+        /// Fires a shot from the player's ship.
+        /// </summary>
         public void FireShot()
         {
-            throw new NotImplementedException();
+            //If there are less than 2 shots on the screen, the ship fires another shot.
+            if (playerShots.Count < 2)
+                playerShots.Add(new Shot());
         }
 
         /// <summary>
@@ -67,7 +78,7 @@ namespace Invaders
 
                 //Move the invaders.*************************************************************************************
                 foreach (Invader invader in invaders)
-                    invader.Move(Direction.Left);
+                    invader.Move(invaderDirection);
 
                 //Check if time to return fire and fire.***********************************************************************
 
@@ -75,9 +86,15 @@ namespace Invaders
             }
         }
 
+        /// <summary>
+        /// Moves the player's ship.
+        /// </summary>
+        /// <param name="direction">The direction the player wants to move in.</param>
         public void MovePlayer(Direction direction)
         {
-            throw new NotImplementedException();
+            //If the player is still alive, move the player's ship.
+            if (playerShip.Alive)
+                playerShip.Move(direction);
         }
 
         /// <summary>
@@ -115,7 +132,62 @@ namespace Invaders
             }
         }
 
+        /// <summary>
+        /// Make the stars twinkle.
+        /// </summary>
         public void Twinkle()
+        {
+            stars.Twinkle(random);
+        }
+
+        /// <summary>
+        /// Creates a new wave of invaders. *********************************Make more complicated.
+        /// </summary>
+        private void NextWave()
+        {
+            wave++;
+            List<Invader> newInvaders = new List<Invader>(30);
+
+            //Creates 6 columns with 5 rows of invaders (30 invaders total).***********************************************
+            for (int i = 0; i < 6; i++)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    newInvaders.Add(new Invader());
+                }
+            }
+            
+            invaderDirection = Direction.Right;
+            framesSkipped = 0;
+        }
+
+        /// <summary>
+        /// Checks if an invader's shot collided with the player.
+        /// </summary>
+        /// <returns>Returns true if a shot collided with the player.</returns>
+        private bool CheckForPlayerCollisions()
+        {
+            return false;//***************************************************************+
+        }
+
+        /// <summary>
+        /// Checks if a player's shot collided with an invader.
+        /// </summary>
+        /// <returns>Returns true if a shot collided with an invader.</returns>
+        private bool CheckFoInvaderCollisions()
+        {
+            return false;//**********************************************************************************
+        }
+
+        //private void MoveInvaders()
+        //{
+
+        //}
+
+        /// <summary>
+        /// Invaders fire back at the player.
+        /// </summary>
+        private void ReturnFire()
         {
 
         }
