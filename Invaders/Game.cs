@@ -76,9 +76,7 @@ namespace Invaders
                     if (!shot.Move())
                         invaderShots.Remove(shot);
 
-                //Move the invaders.*************************************************************************************
-                foreach (Invader invader in invaders)
-                    invader.Move(invaderDirection);
+                MoveInvaders();
 
                 //Check if time to return fire and fire.***********************************************************************
 
@@ -190,6 +188,72 @@ namespace Invaders
         private void ReturnFire()
         {
 
+        }
+
+        /// <summary>
+        /// Moves the invaders.
+        /// </summary>
+        private void MoveInvaders()
+        {
+            //Based on the wave, frames are skipped to slow the movement of the invaders.
+            //The higher the wave, the less frames are skipped thus causing the invaders to move faster.
+            int maxFramesToSkip = 7 - wave;
+            
+            //If the number of frames skipped is less than or equal to the number of frames to skip, skip this frame.
+            if (++framesSkipped <= maxFramesToSkip && framesSkipped > 0)
+            {
+                //If this is the last frame to skip, reset so that the next frame can occur.
+                if (framesSkipped == maxFramesToSkip) 
+                    framesSkipped = -1;
+                return;
+            }
+
+            switch (invaderDirection)
+            {
+                //Invaders are moving to the right.
+                case Direction.Right :
+
+                    //Get a list of any invaders within 100 PX of the right side of the play area.
+                    var invadersCloseToEdge = from invader in invaders
+                                              where boundaries.Width - invader.Location.X < 100
+                                              select invader;
+
+                    //If there are any invaders within 100 PX of the right side of the play area, move the invaders down and change their direction
+                    //to the left.
+                    //Else move the invaders to the right.
+                    if (((List<Invader>)invadersCloseToEdge).Count > 0)
+                    {
+                        foreach (Invader invader in invaders)
+                            invader.Move(Direction.Down);
+                        invaderDirection = Direction.Left;
+                    }
+                    else
+                        foreach (Invader invader in invaders)
+                            invader.Move(invaderDirection);
+                    break;
+
+                //Invaders are moving to the left.
+                case Direction.Left :
+
+                    //Get a list of any invaders within 100 PX of the left side of the play area.
+                    invadersCloseToEdge = from invader in invaders
+                                          where invader.Location.X - boundaries.X < 100
+                                          select invader;
+
+                    //If there are any invaders within 100 PX of the left side of the play area, move the invaders down and change their direction
+                    //to the right.
+                    //Else move the invaders to the left.
+                    if (((List<Invader>)invadersCloseToEdge).Count > 0)
+                    {
+                        foreach (Invader invader in invaders)
+                            invader.Move(Direction.Down);
+                        invaderDirection = Direction.Right;
+                    }
+                    else
+                        foreach (Invader invader in invaders)
+                            invader.Move(invaderDirection);
+                    break;
+            }
         }
     }
 }
