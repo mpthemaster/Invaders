@@ -50,7 +50,10 @@ namespace Invaders
         {
             //If there are less than 2 shots on the screen, the ship fires another shot.
             if (playerShots.Count < 2)
-                playerShots.Add(new Shot());
+            {
+                Point shotLocation = new Point(playerShip.Location.X + playerShip.Area.Width / 2, playerShip.Location.Y);
+                playerShots.Add(new Shot(shotLocation, Direction.Up, boundaries));
+            }
         }
 
         /// <summary>
@@ -77,8 +80,7 @@ namespace Invaders
                         invaderShots.Remove(shot);
 
                 MoveInvaders();
-
-                //Check if time to return fire and fire.***********************************************************************
+                ReturnFire();
 
                 //Collision detection.******************************************************************
             }
@@ -177,17 +179,33 @@ namespace Invaders
             return false;//**********************************************************************************
         }
 
-        //private void MoveInvaders()
-        //{
-
-        //}
-
         /// <summary>
         /// Invaders fire back at the player.
         /// </summary>
         private void ReturnFire()
         {
+            //If there are more shots than the current invader wave or if randomly determined, no invaders fire this frame.
+            if (invaderShots.Count > wave || random.Next(10) < 10 - wave)
+                return;
 
+            //Group invaders by their x locations.
+            var invadersByXLocation = from invader in invaders
+                                      group invader by invader.Location.X
+                                      into invaderGroups
+                                      orderby invaderGroups.Key descending
+                                      select invaderGroups;
+
+            //Randomly select a group to have the front most invader fire from.
+            int invaderGroupToFire = random.Next(invaders.Count);
+            Invader invaderToFire;
+
+            //Find out the front most invader to fire from.
+            List<Invader> invaderGroup = (List<Invader>) invadersByXLocation.ElementAt(invaderGroupToFire);
+            invaderToFire = invaderGroup.First();
+
+            //Emit the shot from the bottom middle of the invader.
+            Point shotLocation = new Point(invaderToFire.Location.X + invaderToFire.Area.Width / 2, invaderToFire.Location.Y + invaderToFire.Area.Height);
+            invaderShots.Add(new Shot(shotLocation, Direction.Down, boundaries));
         }
 
         /// <summary>

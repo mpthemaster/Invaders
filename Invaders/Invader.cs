@@ -10,6 +10,8 @@ namespace Invaders
     {
         public Point Location { get; private set; }
 
+        public Rectangle Area { get; }
+
         internal void Move(Direction direction)
         {
             throw new NotImplementedException();
