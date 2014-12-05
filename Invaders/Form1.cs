@@ -22,7 +22,7 @@ namespace Invaders
         /// </summary>
         private bool gameOver;
         private Game game;
-        private int animationCell; //What animation cell the invaders are on.
+        private double animationCell; //What animation cell the invaders are on.
         private bool descendingAnimation; 
         private Random random;
 
@@ -44,23 +44,23 @@ namespace Invaders
             //Else the animation is ascending through the cells, increase the animation cell that is currently displayed.
             if (descendingAnimation)
             {
-                animationCell--;
+                animationCell-= .1;
 
                 //If the animation cell is less than the minimum cell, reset it and begin ascending.
                 if (animationCell < 0)
                 {
-                    animationCell = 1;
+                    animationCell = 0;
                     descendingAnimation = false;
                 }
             }
             else
             {
-                animationCell++;
+                animationCell += .1;
 
                 //If the animation cells is greater than the maximum cell, reset it and begin descending.
                 if (animationCell < 3)
                 {
-                    animationCell = 2;
+                    animationCell = 3;
                     descendingAnimation = true;
                 }
             }
@@ -148,7 +148,7 @@ namespace Invaders
             Graphics g = e.Graphics;
             
             //Draw the frame.
-            game.Draw(g, animationCell);
+            game.Draw(g, (int)animationCell);
             
             //Draw that the game is over and instructions.
             if (gameOver)
