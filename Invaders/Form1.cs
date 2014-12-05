@@ -44,7 +44,7 @@ namespace Invaders
             //Else the animation is ascending through the cells, increase the animation cell that is currently displayed.
             if (descendingAnimation)
             {
-                animationCell-= .1;
+                animationCell -= .1;
 
                 //If the animation cell is less than the minimum cell, reset it and begin ascending.
                 if (animationCell < 0)

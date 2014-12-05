@@ -36,7 +36,7 @@ namespace Invaders
         {
             this.boundaries = boundaries;
             this.random = random;
-            stars = new Stars();
+            stars = new Stars(boundaries, random);
             playerShip = new PlayerShip(boundaries);
             playerShots = new List<Shot>();
             invaderShots = new List<Shot>();
@@ -153,7 +153,7 @@ namespace Invaders
         /// </summary>
         public void Twinkle()
         {
-            stars.Twinkle(random);
+            stars.Twinkle();
         }
 
         /// <summary>
@@ -203,7 +203,7 @@ namespace Invaders
             bool endGame = false;
 
             //Check if each shot has hit any invaders.
-            //If a shot has hit an invader, remove the invader and the shot.
+            //If a shot has hit an invader, remove the invader and the shot and add to the player's score.
             for (int i = 0; i < invaders.Count(); i++)
             {
                 //If an invader has reached the bottom of the screen, end the game.
@@ -214,6 +214,7 @@ namespace Invaders
                     if (invaders[i].Area.Contains(playerShots[j].Location))
                     {
                         playerShots.Remove(playerShots[j]);
+                        score += invaders[i].Score;
                         invaders.Remove(invaders[i]);
                     }
             }
