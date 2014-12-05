@@ -17,7 +17,8 @@ namespace Invaders
 
         public bool Move()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            return false;
         }
 
         internal void Draw(System.Drawing.Graphics g)

@@ -37,7 +37,7 @@ namespace Invaders
             this.boundaries = boundaries;
             this.random = random;
             stars = new Stars();
-            playerShip = new PlayerShip();
+            playerShip = new PlayerShip(boundaries);
             playerShots = new List<Shot>();
             invaderShots = new List<Shot>();
             NextWave();
@@ -69,20 +69,20 @@ namespace Invaders
             {
                 //Foreach shot fired by the player, move it.
                 //  If the shot moved off screen, remove it from the game.
-                foreach (Shot shot in playerShots)
-                    if (!shot.Move())
-                        playerShots.Remove(shot);
+                for (int i = 0; i < playerShots.Count; i++)
+                    if (!playerShots[i].Move())
+                        playerShots.Remove(playerShots[i]);
 
                 //Foreach shot fired by the invaders, move it.
                 //  If the shot moved off screen, remove it from the game.
-                foreach (Shot shot in invaderShots)
-                    if (!shot.Move())
-                        invaderShots.Remove(shot);
+                for (int i = 0; i < invaderShots.Count; i++)
+                    if (!invaderShots[i].Move())
+                        invaderShots.Remove(invaderShots[i]);
 
                 MoveInvaders();
                 ReturnFire();
 
-                //Collision detection.******************************************************************
+                //Collision detection.
                 //If an invader has reached the end of the screen, fire the game over event.
                 if (CheckFoInvaderCollisions() && OnGameOver != null)
                     OnGameOver(this, new EventArgs());
@@ -91,11 +91,13 @@ namespace Invaders
                 //  If the player is out of lives, end the game.
                 //  Else take away a life.
                 if (CheckForPlayerCollisions())
+                {
+                    playerShip.Alive = false;
                     if (livesLeft == 0)
                         OnGameOver(this, new EventArgs());
                     else
                         livesLeft--;
-                    
+                }
                
             }
         }
@@ -235,12 +237,17 @@ namespace Invaders
                                       select invaderGroups;
 
             //Randomly select a group to have the front most invader fire from.
-            int invaderGroupToFire = random.Next(invaders.Count);
-            Invader invaderToFire;
+            int invaderGroupToFire = random.Next(invadersByXLocation.Count());
+            Invader invaderToFire = null;
 
             //Find out the front most invader to fire from.
-            List<Invader> invaderGroup = (List<Invader>) invadersByXLocation.ElementAt(invaderGroupToFire);
-            invaderToFire = invaderGroup.First();
+            int i = 0;
+            foreach (var invaderGroup in invadersByXLocation)
+            {
+                if (i == invaderGroupToFire)
+                    invaderToFire = invaderGroup.First();
+                i++;
+            }
 
             //Emit the shot from the bottom middle of the invader.
             Point shotLocation = new Point(invaderToFire.Location.X + invaderToFire.Area.Width / 2, invaderToFire.Location.Y + invaderToFire.Area.Height);
@@ -278,7 +285,7 @@ namespace Invaders
                     //If there are any invaders within 100 PX of the right side of the play area, move the invaders down and change their direction
                     //to the left.
                     //Else move the invaders to the right.
-                    if (((List<Invader>)invadersCloseToEdge).Count > 0)
+                    if (invadersCloseToEdge.Count() > 0)
                     {
                         foreach (Invader invader in invaders)
                             invader.Move(Direction.Down);
@@ -300,7 +307,7 @@ namespace Invaders
                     //If there are any invaders within 100 PX of the left side of the play area, move the invaders down and change their direction
                     //to the right.
                     //Else move the invaders to the left.
-                    if (((List<Invader>)invadersCloseToEdge).Count > 0)
+                    if (invadersCloseToEdge.Count() > 0)
                     {
                         foreach (Invader invader in invaders)
                             invader.Move(Direction.Down);

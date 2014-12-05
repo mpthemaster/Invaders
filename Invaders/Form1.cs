@@ -64,7 +64,6 @@ namespace Invaders
                     descendingAnimation = true;
                 }
             }
-            game.Go();
             game.Twinkle();
             Refresh();
         }
