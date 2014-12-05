@@ -25,7 +25,7 @@ namespace Invaders
         /// <summary>
         /// Fires when the game is over.
         /// </summary>
-        public event EventHandler GameOver;
+        public event EventHandler OnGameOver;
 
         /// <summary>
         /// Creates the game.
@@ -83,6 +83,20 @@ namespace Invaders
                 ReturnFire();
 
                 //Collision detection.******************************************************************
+                //If an invader has reached the end of the screen, fire the game over event.
+                if (CheckFoInvaderCollisions() && OnGameOver != null)
+                    OnGameOver(this, new EventArgs());
+
+                //If the player was hit by an invader shot,
+                //  If the player is out of lives, end the game.
+                //  Else take away a life.
+                if (CheckForPlayerCollisions())
+                    if (livesLeft == 0)
+                        OnGameOver(this, new EventArgs());
+                    else
+                        livesLeft--;
+                    
+               
             }
         }
 
@@ -167,16 +181,39 @@ namespace Invaders
         /// <returns>Returns true if a shot collided with the player.</returns>
         private bool CheckForPlayerCollisions()
         {
-            return false;//***************************************************************+
+            for (int i = 0; i < invaderShots.Count(); i++)
+                if (playerShip.Area.Contains(invaderShots[i].Location))
+                {
+                    invaderShots.Remove(invaderShots[i]);
+                    return true;
+                }
+            return false;
         }
 
         /// <summary>
-        /// Checks if a player's shot collided with an invader.
+        /// Checks if a player's shot collided with an invader and whether the invaders reached the bottom of the screen.
         /// </summary>
-        /// <returns>Returns true if a shot collided with an invader.</returns>
+        /// <returns>Returns true if an invader reached the bottom of the screen.</returns>
         private bool CheckFoInvaderCollisions()
         {
-            return false;//**********************************************************************************
+            bool endGame = false;
+
+            //Check if each shot has hit any invaders.
+            //If a shot has hit an invader, remove the invader and the shot.
+            for (int i = 0; i < invaders.Count(); i++)
+            {
+                //If an invader has reached the bottom of the screen, end the game.
+                if (invaders[i].Location.Y + invaders[i].Area.Height >= boundaries.Height)
+                    endGame = true;
+
+                for (int j = 0; j < playerShots.Count(); j++)
+                    if (invaders[i].Area.Contains(playerShots[j].Location))
+                    {
+                        playerShots.Remove(playerShots[j]);
+                        invaders.Remove(invaders[i]);
+                    }
+            }
+            return endGame;
         }
 
         /// <summary>

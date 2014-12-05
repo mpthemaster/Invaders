@@ -31,7 +31,7 @@ namespace Invaders
 
             random = new Random();
             game = new Game(ClientRectangle, random); //Tells the game object how big the game's window is.
-            game.GameOver += Game_GameOver;
+            game.OnGameOver += Game_GameOver;
         }
 
         /// <summary>

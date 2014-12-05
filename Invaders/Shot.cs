@@ -8,6 +8,8 @@ namespace Invaders
 {
     class Shot
     {
+        public Point Location { get; private set; }
+
         public Shot(Point location, Direction direction, Rectangle boundaries)
         {
 
