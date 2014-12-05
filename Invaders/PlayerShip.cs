@@ -10,6 +10,7 @@ namespace Invaders
     {
         private Bitmap image; //The image of the player's ship.
         private Rectangle boundaries;
+        private int speed = 10;
 
         //Whether or not the player's ship is alive.
         public bool Alive { get; set; }
@@ -40,11 +41,32 @@ namespace Invaders
         {
             if (Alive)
                 g.DrawImageUnscaled(Properties.Resources.player, Location);
+                
         }
 
-        internal void Move(Direction direction)
+        /// <summary>
+        /// Moves the player's ship left or right.
+        /// </summary>
+        /// <param name="direction">The direction for the player's ship to move.</param>
+        public void Move(Direction direction)
         {
-            throw new NotImplementedException();
+            int newXLocation;
+            switch (direction)
+            {
+                //If the player's new location is within the boundaries of the surface being drawn to, the player can move.
+                case Direction.Left:
+                    newXLocation = Location.X - speed;
+                    if (newXLocation > boundaries.X)
+                        Location = new Point(Location.X - speed, Location.Y);
+                    break;
+
+                //If the player's new location is within the boundaries of the surface being drawn to, the player can move.
+                case Direction.Right:
+                    newXLocation = Location.X + speed;
+                    if (newXLocation + image.Width < boundaries.Right)
+                        Location = new Point(Location.X + speed, Location.Y);
+                    break;
+            }
         }
     }
 }
