@@ -162,15 +162,17 @@ namespace Invaders
             wave++;
             List<Invader> newInvaders = new List<Invader>(30);
 
-            //Creates 6 columns with 5 rows of invaders (30 invaders total).***********************************************
+            //Creates 6 columns with 5 rows of invaders (30 invaders total).
             for (int i = 0; i < 6; i++)
             {
                 for (int j = 0; j < 5; j++)
                 {
-                    newInvaders.Add(new Invader());
+                    Point location = new Point(100 + 75 * i, 75 + 75 * j);
+                    newInvaders.Add(new Invader(ShipType.Star, location, 10));
                 }
             }
-            
+
+            invaders = newInvaders;
             invaderDirection = Direction.Right;
             framesSkipped = 0;
         }

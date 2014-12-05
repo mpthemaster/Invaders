@@ -35,11 +35,13 @@
             // 
             // timerAnimation
             // 
+            this.timerAnimation.Enabled = true;
             this.timerAnimation.Interval = 33;
             this.timerAnimation.Tick += new System.EventHandler(this.timerAnimation_Tick);
             // 
             // timerGame
             // 
+            this.timerGame.Enabled = true;
             this.timerGame.Interval = 10;
             this.timerGame.Tick += new System.EventHandler(this.timerGame_Tick);
             // 
@@ -47,7 +49,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1077, 464);
+            this.ClientSize = new System.Drawing.Size(882, 600);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;

@@ -23,6 +23,7 @@ namespace Invaders
         private bool gameOver;
         private Game game;
         private int animationCell; //What animation cell the invaders are on.
+        private bool descendingAnimation; 
         private Random random;
 
         public Form1()
@@ -39,8 +40,33 @@ namespace Invaders
         /// </summary>
         private void timerAnimation_Tick(object sender, EventArgs e)
         {
+            //If the animation is descending back through the cells, decrement the animation cell that is currently displayed.
+            //Else the animation is ascending through the cells, increase the animation cell that is currently displayed.
+            if (descendingAnimation)
+            {
+                animationCell--;
+
+                //If the animation cell is less than the minimum cell, reset it and begin ascending.
+                if (animationCell < 0)
+                {
+                    animationCell = 1;
+                    descendingAnimation = false;
+                }
+            }
+            else
+            {
+                animationCell++;
+
+                //If the animation cells is greater than the maximum cell, reset it and begin descending.
+                if (animationCell < 3)
+                {
+                    animationCell = 2;
+                    descendingAnimation = true;
+                }
+            }
             game.Go();
             game.Twinkle();
+            Refresh();
         }
 
         /// <summary>
