@@ -227,7 +227,7 @@ namespace Invaders
         private void ReturnFire()
         {
             //If there are more shots than the current invader wave or if randomly determined, no invaders fire this frame.
-            if (invaderShots.Count > wave || random.Next(10) < 10 - wave)
+            if (invaderShots.Count > wave || random.Next(40) < 40 - wave) //Add a multiplier to wave if difficulty isn't increasing by enough.
                 return;
 
             //Group invaders by their x locations.
@@ -246,13 +246,19 @@ namespace Invaders
             foreach (var invaderGroup in invadersByXLocation)
             {
                 if (i == invaderGroupToFire)
-                    invaderToFire = invaderGroup.First();
+                {
+                    invaderToFire = invaderGroup.Last();
+                    break;
+                }
                 i++;
             }
 
-            //Emit the shot from the bottom middle of the invader.
-            Point shotLocation = new Point(invaderToFire.Location.X + invaderToFire.Area.Width / 2, invaderToFire.Location.Y + invaderToFire.Area.Height);
-            invaderShots.Add(new Shot(shotLocation, Direction.Down, boundaries));
+            //If there are any invaders, emit the shot from the bottom middle of the invader.
+            if (invaders.Count > 0)
+            {
+                Point shotLocation = new Point(invaderToFire.Location.X + invaderToFire.Area.Width / 2, invaderToFire.Location.Y + invaderToFire.Area.Height);
+                invaderShots.Add(new Shot(shotLocation, Direction.Down, boundaries));
+            }
         }
 
         /// <summary>

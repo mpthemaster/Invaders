@@ -11,7 +11,7 @@ namespace Invaders
         private Bitmap image; //The image of the player's ship.
         private Rectangle boundaries;
         private int speed = 10; //How fast the ship travels.
-        private DateTime shipDeath; //The time that the player's shiped has been shot. Allows a death animation to occur for 3 seconds.
+        private DateTime shipDeath; //The time that the player's ship has been shot. Allows a death animation to occur for 3 seconds.
         private int deadShipHeight; //The ship is animated as being destroyed by shrinking out of existence.
 
         /// <summary>
@@ -76,8 +76,9 @@ namespace Invaders
                 //If the height of the player's ship is greater than 0, decrease it's height and draw it further destroyed.
                 if (deadShipHeight > 0)
                 {
+                    //As the height of the ship is decreased, it's y-coordinate is increased to maintain its bottom location.
                     deadShipHeight--;
-                    g.DrawImage(image, Location.X, Location.Y, image.Width, deadShipHeight);
+                    g.DrawImage(image, Location.X, Location.Y + image.Height - deadShipHeight, image.Width, deadShipHeight);
                 }
 
                 //If three seconds has passed, the ship is alive again and gameplay can continue.
