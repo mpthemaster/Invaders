@@ -41,7 +41,6 @@
             // 
             // timerGame
             // 
-            this.timerGame.Enabled = true;
             this.timerGame.Interval = 10;
             this.timerGame.Tick += new System.EventHandler(this.timerGame_Tick);
             // 

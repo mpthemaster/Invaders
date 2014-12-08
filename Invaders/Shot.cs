@@ -42,7 +42,7 @@ namespace Invaders
                 //The shot is moving up, move it up and then check if it moved outside of the boundaries.
                 case Direction.Up:
                     Location = new Point(Location.X, Location.Y - MOVEINTERVAL);
-                    if (Location.Y < boundaries.Y)
+                    if (Location.Y + HEIGHT < boundaries.Y)
                         return false;
                     else
                         return true;

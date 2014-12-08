@@ -20,7 +20,7 @@ namespace Invaders
         /// <summary>
         /// Whether the game is over.
         /// </summary>
-        private bool gameOver;
+        private bool gameOver = true;
         private Game game;
         private double animationCell; //What animation cell the invaders are on.
         private bool descendingAnimation; 
@@ -103,7 +103,10 @@ namespace Invaders
             //  reset the game.
             if (gameOver && e.KeyCode == Keys.S)
             {
-                //Reset the game code. *********************************************************************
+                game = new Game(ClientRectangle, random);
+                game.OnGameOver += Game_GameOver;
+                gameOver = false;
+                timerGame.Start();
                 return;
             }
 
@@ -111,6 +114,10 @@ namespace Invaders
             //  fire a shot.
             if (e.KeyCode == Keys.Space)
                 game.FireShot();
+
+            //Cheat to advance to next wave. No score increase.
+            if (e.KeyCode == Keys.X)
+                game.RemoveInvaders();
 
             //If the key has already been added to the list,
             //  remove it so that it can be placed at the top so that the most current key pressed in the list is the top.

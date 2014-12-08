@@ -98,7 +98,9 @@ namespace Invaders
                     else
                         livesLeft--;
                 }
-               
+
+                if (invaders.Count == 0)
+                    NextWave();
             }
         }
 
@@ -164,16 +166,135 @@ namespace Invaders
             wave++;
             List<Invader> newInvaders = new List<Invader>(30);
 
-            //Creates 6 columns with 5 rows of invaders (30 invaders total).
-            for (int i = 0; i < 6; i++)
+            //Depending on the wave, create a different set of invaders.
+            switch (wave)
             {
-                for (int j = 0; j < 5; j++)
-                {
-                    Point location = new Point(100 + 75 * i, 75 + 75 * j);
-                    newInvaders.Add(new Invader(ShipType.Star, location, 10));
-                }
-            }
+                case 1:
+                    //Creates 6 columns with 5 rows of invaders (30 invaders total). 
+                    //All stars.
+                    for (int i = 0; i < 6; i++)
+                    {
+                        for (int j = 0; j < 5; j++)
+                        {
+                            Point location = new Point(100 + 75 * i, 75 + 75 * j);
+                            newInvaders.Add(new Invader(ShipType.Star, location));
+                        }
+                    }
+                    break;
 
+                case 2:
+                    //Creates 6 columns with 5 rows of invaders (30 invaders total). 
+                    //First row spaceships. 
+                    //Rest stars.
+                    for (int i = 0; i < 6; i++)
+                    {
+                        for (int j = 0; j < 5; j++)
+                        {
+                            ShipType shipType;
+                            if (j == 0)
+                                shipType = ShipType.Spaceship;
+                            else
+                                shipType = ShipType.Star;
+
+                            Point location = new Point(100 + 75 * i, 75 + 75 * j);
+                            newInvaders.Add(new Invader(shipType, location));
+                        }
+                    }
+                    break;
+
+                case 3:
+                    //Creates 6 columns with 5 rows of invaders (30 invaders total). 
+                    //First row saucers. 
+                    //Second row spaceships. 
+                    //Rest stars.
+                    for (int i = 0; i < 6; i++)
+                    {
+                        for (int j = 0; j < 5; j++)
+                        {
+                            ShipType shipType;
+                            if (j == 0)
+                                shipType = ShipType.Saucer;
+                            else if (j == 1)
+                                shipType = ShipType.Spaceship;
+                            else
+                                shipType = ShipType.Star;
+
+                            Point location = new Point(100 + 75 * i, 75 + 75 * j);
+                            newInvaders.Add(new Invader(shipType, location));
+                        }
+                    }
+                    break;
+
+                case 4:
+                    //Creates 6 columns with 5 rows of invaders (30 invaders total). 
+                    //First row bugs. 
+                    //Second row saucers. 
+                    //Third row spaceships.
+                    //Rest stars.
+                    for (int i = 0; i < 6; i++)
+                    {
+                        for (int j = 0; j < 5; j++)
+                        {
+                            ShipType shipType;
+                            if (j == 0)
+                                shipType = ShipType.Bug;
+                            else if (j == 1)
+                                shipType = ShipType.Saucer;
+                            else if (j == 2)
+                                shipType = ShipType.Spaceship;
+                            else
+                                shipType = ShipType.Star;
+
+                            Point location = new Point(100 + 75 * i, 75 + 75 * j);
+                            newInvaders.Add(new Invader(shipType, location));
+                        }
+                    }
+                    break;
+
+                case 5:
+                    //Creates 6 columns with 5 rows of invaders (30 invaders total). 
+                    //First row satellites. 
+                    //Second row bugs. 
+                    //Third row saucers.
+                    //Fourth row spaceships.
+                    //Fifth row stars.
+                    for (int i = 0; i < 6; i++)
+                    {
+                        for (int j = 0; j < 5; j++)
+                        {
+                            ShipType shipType;
+                            if (j == 0)
+                                shipType = ShipType.Satellite;
+                            else if (j == 1)
+                                shipType = ShipType.Bug;
+                            else if (j == 2)
+                                shipType = ShipType.Saucer;
+                            else if (j == 3)
+                                shipType = ShipType.Spaceship;
+                            else
+                                shipType = ShipType.Star;
+
+                            Point location = new Point(100 + 75 * i, 75 + 75 * j);
+                            newInvaders.Add(new Invader(shipType, location));
+                        }
+                    }
+                    break;
+
+                    //All waves after the fifth are randomly generated.
+                default:
+                    //Creates 6 columns with 5 rows of invaders (30 invaders total). 
+                    //All random.
+                    for (int i = 0; i < 6; i++)
+                    {
+                        for (int j = 0; j < 5; j++)
+                        {
+                            ShipType shipType = (ShipType) random.Next(5);
+                            Point location = new Point(100 + 75 * i, 75 + 75 * j);
+                            newInvaders.Add(new Invader(shipType, location));
+                        }
+                    }
+                    break;
+            }
             invaders = newInvaders;
             invaderDirection = Direction.Right;
             framesSkipped = 0;
@@ -325,6 +446,14 @@ namespace Invaders
                             invader.Move(invaderDirection);
                     break;
             }
+        }
+
+        /// <summary>
+        /// Removes all invaders so the player can advance to the next wave. No score added.
+        /// </summary>
+        public void RemoveInvaders()
+        {
+            invaders.RemoveRange(0, invaders.Count);
         }
     }
 }

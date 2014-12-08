@@ -43,12 +43,27 @@ namespace Invaders
         /// <param name="shipType">The type of ship the invader is.</param>
         /// <param name="location">The location to spawn the invader at.</param>
         /// <param name="score">The number of points this invader is worth.</param>
-        public Invader(ShipType shipType, Point location, int score)
+        public Invader(ShipType shipType, Point location)
         {
             InvaderType = shipType;
             Location = location;
-            Score = score;
+            DetermineScore();
             image = InvaderImage(0);
+        }
+
+        /// <summary>
+        /// Determines how many points this invader is worth based on its ship type.
+        /// </summary>
+        private void DetermineScore()
+        {
+            switch (InvaderType)
+            {
+                case ShipType.Bug: Score = 40; break;
+                case ShipType.Satellite: Score = 50; break;
+                case ShipType.Saucer: Score = 30; break;
+                case ShipType.Spaceship: Score = 20; break;
+                case ShipType.Star: Score = 10; break;
+            }
         }
 
         /// <summary>
