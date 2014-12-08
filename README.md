@@ -25,4 +25,5 @@ Planned Optimizations:
 3. Multi-threading with Tasks.
 4. Release settings changed to remove all debug info.
 5. Runtime performance analysis for bottlenecks.
+6. Use delta time.
 ....
