@@ -21,7 +21,7 @@ namespace Invaders
 
         private Stars stars;
 
-
+        private List<Shield> shields;
         /// <summary>
         /// Fires when the game is over.
         /// </summary>
@@ -40,7 +40,46 @@ namespace Invaders
             playerShip = new PlayerShip(boundaries);
             playerShots = new List<Shot>();
             invaderShots = new List<Shot>();
+            shields = new List<Shield>();
+            GenerateShields();
             NextWave();
+        }
+
+        /// <summary>
+        /// Creates and places shields.
+        /// </summary>
+        private void GenerateShields()
+        {
+            //Figure out how many shields can be placed within the play area.
+            int numOfShields = (boundaries.Width - 200) / Shield.WIDTH;
+            
+            //For the number of shields, create the shields.
+            for (int i = 0; i < numOfShields; i++)
+            {
+                //The X location of the shield = within the play area + the distance that should be between ships.
+                //The Y location of the shield = slightly below the player's ship
+                Point location = new Point(boundaries.X + 100 + (Shield.WIDTH + 100) * i, playerShip.Location.Y - Shield.HEIGHT - 50);
+
+                //If the generated X coordinate is inside the player area, create the shield.
+                //Else the generated X coordinate is outside the player area, so all the shields that fit have been created and the loop can exit.
+                if (location.X + Shield.WIDTH < boundaries.Width - 100)
+                {
+                    Shield newShield = new Shield(location);
+                    newShield.OnShieldDestroyed += newShield_OnShieldDestroyed;
+                    shields.Add(newShield);
+                }
+                else
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Removes the shield that has been destroyed.
+        /// </summary>
+        /// <param name="sender">The destroyed shield.</param>
+        private void newShield_OnShieldDestroyed(object sender, EventArgs e)
+        {
+            shields.Remove((Shield) sender);
         }
 
         /// <summary>
@@ -67,21 +106,6 @@ namespace Invaders
                 return;
             else
             {
-                //Foreach shot fired by the player, move it.
-                //  If the shot moved off screen, remove it from the game.
-                for (int i = 0; i < playerShots.Count; i++)
-                    if (!playerShots[i].Move())
-                        playerShots.Remove(playerShots[i]);
-
-                //Foreach shot fired by the invaders, move it.
-                //  If the shot moved off screen, remove it from the game.
-                for (int i = 0; i < invaderShots.Count; i++)
-                    if (!invaderShots[i].Move())
-                        invaderShots.Remove(invaderShots[i]);
-
-                MoveInvaders();
-                ReturnFire();
-
                 //Collision detection.
                 //If an invader has reached the end of the screen, fire the game over event.
                 if (CheckFoInvaderCollisions() && OnGameOver != null)
@@ -98,6 +122,23 @@ namespace Invaders
                     else
                         livesLeft--;
                 }
+
+                CheckForShieldCollisions();
+
+                //Foreach shot fired by the player, move it.
+                //  If the shot moved off screen, remove it from the game.
+                for (int i = 0; i < playerShots.Count; i++)
+                    if (!playerShots[i].Move())
+                        playerShots.Remove(playerShots[i]);
+
+                //Foreach shot fired by the invaders, move it.
+                //  If the shot moved off screen, remove it from the game.
+                for (int i = 0; i < invaderShots.Count; i++)
+                    if (!invaderShots[i].Move())
+                        invaderShots.Remove(invaderShots[i]);
+
+                MoveInvaders();
+                ReturnFire();
 
                 if (invaders.Count == 0)
                     NextWave();
@@ -137,6 +178,9 @@ namespace Invaders
 
             foreach (Shot shot in invaderShots)
                 shot.Draw(g);
+
+            for (int i = shields.Count - 1; i >= 0; i--)
+                shields[i].Draw(g);
 
             //Draw score.
             g.DrawString(score.ToString(), new Font(FontFamily.Families[0], 45f), Brushes.GreenYellow, 0, -10);
@@ -306,13 +350,37 @@ namespace Invaders
         /// <returns>Returns true if a shot collided with the player.</returns>
         private bool CheckForPlayerCollisions()
         {
-            for (int i = 0; i < invaderShots.Count(); i++)
+            for (int i = invaderShots.Count - 1; i >= 0; i--)
                 if (playerShip.Area.Contains(invaderShots[i].Location))
                 {
-                    invaderShots.Remove(invaderShots[i]);
+                    invaderShots.RemoveAt(i);
                     return true;
                 }
             return false;
+        }
+
+        /// <summary>
+        /// Checks if a shield has been hit by an invader's shot or a player's shot.
+        /// </summary>
+        private void CheckForShieldCollisions()
+        {
+            //Foreach shield,
+            //  If a player's shot hit it, the player's shot is destroyed.
+            //  If an invader's shot hit it, the invader's shot is destroyed and the shield takes a hit.
+            foreach (Shield shield in shields)
+            {
+                for (int i = playerShots.Count - 1; i >= 0; i--)
+                     if (shield.Area.Contains(playerShots[i].Location))
+                        playerShots.RemoveAt(i);
+
+                for (int i = invaderShots.Count - 1; i >= 0; i--)
+                    if (shield.Area.Contains(invaderShots[i].Location))
+                    {
+                        invaderShots.RemoveAt(i);
+                        shield.Hit();
+                    }
+            }
+                
         }
 
         /// <summary>
@@ -325,18 +393,19 @@ namespace Invaders
 
             //Check if each shot has hit any invaders.
             //If a shot has hit an invader, remove the invader and the shot and add to the player's score.
-            for (int i = 0; i < invaders.Count(); i++)
+            for (int i = invaders.Count - 1; i >= 0; i--)
             {
                 //If an invader has reached the bottom of the screen, end the game.
                 if (invaders[i].Location.Y + invaders[i].Area.Height >= boundaries.Height)
                     endGame = true;
 
-                for (int j = 0; j < playerShots.Count(); j++)
+                for (int j = playerShots.Count - 1; j >= 0; j--)
                     if (invaders[i].Area.Contains(playerShots[j].Location))
                     {
-                        playerShots.Remove(playerShots[j]);
+                        playerShots.RemoveAt(j);
                         score += invaders[i].Score;
-                        invaders.Remove(invaders[i]);
+                        invaders.RemoveAt(i);
+                        break;
                     }
             }
             return endGame;
