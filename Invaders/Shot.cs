@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Drawing;
+﻿using System.Drawing;
 
 namespace Invaders
 {
     class Shot
     {
-        private const int MOVEINTERVAL = 20, WIDTH = 5, HEIGHT = 15;
+        private const int MOVEINTERVAL = 15, WIDTH = 5, HEIGHT = 15;
 
         /// <summary>
         /// The location of the shot.
